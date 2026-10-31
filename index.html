@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>小米官网首屏复刻</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== ① 固定导航 ========== -->
+    <header class="nav">
+        <div class="nav-inner">
+            <a class="logo" href="#">mi</a>
+
+            <nav class="menu">
+                <a href="#">小米官网</a>
+                <a href="#">小米商城</a>
+                <a href="#">小米澎湃OS</a>
+                <a href="#">小米汽车</a>
+                <a href="#">小米影像</a>
+                <a href="#">云服务</a>
+                <a href="#">IoT</a>
+                <a href="#">有品</a>
+                <a href="#">小爱开放平台</a>
+                <a href="#">Location</a>
+            </nav>
+
+            <div class="nav-right">
+                <a href="#">登录</a>
+                <span class="divider">|</span>
+                <a href="#">注册</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== ② 首屏 ==========
+         这里删掉了原来的 .hero-content 文字层：
+         因为下载的图里文字已经烧死了，再画一遍就是双影。
+         原站图片是真背景（无文字），所以它有文字层；我们的素材不同，处理方式就不同。
+    -->
+    <section class="hero">
+        <div class="hero-bg">
+            <img src="reference/hero-bg.jpg" alt="小米 SU7 Ultra">
+        </div>
+
+        <button class="hero-arrow prev" aria-label="上一张">‹</button>
+        <button class="hero-arrow next" aria-label="下一张">›</button>
+
+        <div class="hero-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </section>
+
+    <!-- ========== ③ 第二屏：在这里练「文字压图」 ========== -->
+    <section class="screen">
+        <div class="screen-bg"></div>
+        <div class="screen-content">
+            <h2>第二屏</h2>
+            <p>文字层用绝对定位压在背景层上 —— 这才是「文字压图」的标准做法</p>
+        </div>
+    </section>
+
+    <!-- ========== ④ 商品卡片区（Grid） ========== -->
+    <section class="products">
+        <div class="product-card">商品 1</div>
+        <div class="product-card">商品 2</div>
+        <div class="product-card">商品 3</div>
+        <div class="product-card">商品 4</div>
+        <div class="product-card">商品 5</div>
+        <div class="product-card">商品 6</div>
+        <div class="product-card">商品 7</div>
+        <div class="product-card">商品 8</div>
+    </section>
+
+</body>
+</html>

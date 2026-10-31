@@ -1,0 +1,226 @@
+/* ============================================================
+   P02 · 小米官网首屏复刻
+   结构参照真实 DOM：固定导航 + 满屏 hero + 绝对定位浮层
+   原站用 Tailwind + 自研 token，这里用传统 CSS 实现同一套架构。
+   ============================================================ */
+
+/* ===== 0. 重置 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* ============================================================
+   ① 导航 —— position: fixed（真实站就是这么写的）
+   ============================================================ */
+.nav {
+    position: fixed;              /* 钉在窗口上，不随页面滚动 */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;                  /* 盖在 hero 之上 */
+
+    /* 毛玻璃：半透明白 + 背景模糊（原站的 backdrop-blur-2xl） */
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;                 /* ← 按你量到的改 */
+    padding: 0 40px;              /* ← 按你量到的改 */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ff6700;
+    letter-spacing: -1px;
+}
+
+.menu {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: #c8c8c8;
+}
+
+.menu a:hover {
+    color: #fff;                  /* 深色页面：hover 变亮 */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #c8c8c8;
+}
+
+.nav-right .divider {
+    color: #666;
+}
+
+
+/* ============================================================
+   ② 首屏 —— 满屏高，图片按自身比例显示（不裁切）
+   ------------------------------------------------------------
+   ⭐ 这里是本课最重要的一处改动，来自真实源码：
+   原站是 <picture style="width:100%"> + <img style="width:100%;height:auto">
+   不是 background-size: cover。
+   区别：cover 会裁掉图片两侧（车会被切掉），
+        width:100%+height:auto 则完整显示图片，容器多出来的高度用深色底补上。
+   ============================================================ */
+.hero {
+    position: relative;
+    height: 100vh;                /* 100% 视口高度 */
+    min-height: 520px;
+    overflow: hidden;
+    background-color: #0a0a0a;    /* 图没铺到的地方用深色填 */
+
+    display: flex;                /* 让图片垂直居中 */
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-bg {
+    width: 100%;
+}
+
+.hero-bg img {
+    display: block;               /* 去掉 img 底部的 3px 空隙 */
+    width: 100%;
+    height: auto;                 /* 高度跟着比例走，不变形也不裁切 */
+}
+
+/* 左右箭头：绝对定位 + 垂直居中 */
+.hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 48px;
+    height: 48px;
+    font-size: 32px;
+    line-height: 1;
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.hero-arrow:hover {
+    opacity: 1;
+}
+
+.hero-arrow.prev { left: 40px; }
+.hero-arrow.next { right: 40px; }
+
+/* 底部进度条 */
+.hero-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dot {
+    width: 44px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.dot.active {
+    background-color: #ff6700;
+}
+
+
+/* ============================================================
+   ③ 第二屏 —— 在这里练「文字压图」
+   ------------------------------------------------------------
+   三层结构，背下来：
+     父级 .screen       position: relative   ← 定位参照物
+     ├─ .screen-bg      position: absolute   ← 背景层（inset: 0 铺满）
+     └─ .screen-content position: relative   ← 文字层（z-index 抬起来）
+   ============================================================ */
+.screen {
+    position: relative;
+    min-height: 80vh;
+    overflow: hidden;
+}
+
+.screen-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #3a1f14 0%, #12100f 60%, #000 100%);
+}
+
+.screen-content {
+    position: relative;
+    z-index: 2;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.screen-content h2 {
+    font-size: 40px;
+    font-weight: 400;
+    letter-spacing: 4px;
+}
+
+.screen-content p {
+    font-size: 14px;
+    color: #999;
+}
+
+
+/* ============================================================
+   ④ 商品卡片区 —— Grid，一行几列改一个数字
+   ============================================================ */
+.products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);   /* ← 改成 3 试试 */
+    gap: 14px;
+    max-width: 1226px;
+    margin: 60px auto;
+    padding: 0 24px;
+}
+
+.product-card {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    color: #666;
+    font-size: 14px;
+}
